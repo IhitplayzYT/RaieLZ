@@ -1,0 +1,1 @@
+password / OAuth refresh token in the OS credential store/keyring or another appropriately protected secret store.

@@ -20,7 +20,13 @@ pub mod Helper{
         pub db_user: Option<String>,
         pub db_pass: Option<String>,   
         pub db_port: Option<u16>,
-        pub db: Option<String>
+        pub db: Option<String>,
+        pub username: Option<String>,
+        pub smtp_srvr: Option<String>,
+        pub imap_srvr: Option<String>,
+        pub imap_port: Option<u16>,
+        pub smtp_port: Option<u16>,
+        pub config: Option<String>
     }
 
 
@@ -32,7 +38,7 @@ pub mod Helper{
 
     impl CLI{
         pub fn new() -> Self{
-            Self {dbg: false,mail:None,db_pass:None,pass:None,db_url:None,db_user:None,db:None,db_port: None}
+            Self {dbg: false,mail:None,db_pass:None,pass:None,db_url:None,db_user:None,db:None,db_port: None,username:None,smtp_srvr:None,imap_srvr:None,smtp_port:None,imap_port:None,config:None}
         }
 
         pub fn Parse_Args(&mut self){
@@ -44,10 +50,31 @@ pub mod Helper{
             self.db_pass = if let Ok(x) = std::env::var("DB_PASS"){Some(x)}else{None}; 
             self.db_url = if let Ok(x) = std::env::var("DB_URL"){Some(x)}else{None}; 
             self.db_port = if let Ok(x) = std::env::var("DB_PORT"){Some(x.parse::<u16>().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
-             
+            self.username = if let Ok(x) = std::env::var("USERNAME"){Some(x)}else{None}; 
+            self.smtp_srvr = if let Ok(x) = std::env::var("SMTP_SRVR"){Some(x)}else{None}; 
+            self.imap_srvr = if let Ok(x) = std::env::var("IMAP_SRVR"){Some(x)}else{None}; 
+            self.smtp_port = if let Ok(x) = std::env::var("SMTP_PORT"){Some(x.parse().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
+            self.imap_port = if let Ok(x) = std::env::var("IMAP_PORT"){Some(x.parse().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
+
             if self.mail.is_none(){
                 self.mail = if let Ok(x) = std::env::var("EMAIL"){Some(x)}else{None}; 
             }
+            if self.smtp_srvr.is_none(){
+                self.smtp_srvr = if let Ok(x) = std::env::var("SMTP_SERVER"){Some(x)}else{None}; 
+            }
+            if self.smtp_srvr.is_none(){
+                self.smtp_srvr = if let Ok(x) = std::env::var("SMTP"){Some(x)}else{None}; 
+            }
+
+
+            if self.imap_srvr.is_none(){
+                self.imap_srvr = if let Ok(x) = std::env::var("IMAP_SERVER"){Some(x)}else{None}; 
+            }
+
+            if self.imap_srvr.is_none(){
+                self.imap_srvr = if let Ok(x) = std::env::var("IMAP"){Some(x)}else{None}; 
+            }           
+
 
             if self.db_port.is_none(){
                 self.db_port = if let Ok(x) = std::env::var("PORT"){Some(x.parse::<u16>().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
@@ -104,11 +131,30 @@ pub mod Helper{
                     self.db = Some(i[i.find("=").unwrap()+1..].to_string());
                 } else if i.starts_with("--db_port=") || i.starts_with("-db_p="){
                     self.db_port = Some(i[i.find("=").unwrap()+1..].parse::<u16>().expect("Port is an Unsigned 16 bit integer"));
+                }  else if i.starts_with("--username=") || i.starts_with("-u="){
+                    self.username = Some(i[i.find("=").unwrap()+1..].to_string());
+                } else if i.starts_with("--smtp_srvr=") || i.starts_with("-smpt="){
+                    self.smtp_srvr = Some(i[i.find("=").unwrap()+1..].to_string());
+                } else if i.starts_with("--imap_srvr=") || i.starts_with("-imap="){
+                    self.imap_srvr = Some(i[i.find("=").unwrap()+1..].to_string());
+                } else if i.starts_with("--config=") || i.starts_with("-conf="){
+                    self.config = Some(i[i.find("=").unwrap()+1..].to_string());
                 } else{
                     Help();
                 }
             } 
 
+        if self.username.is_none(){
+            self.username = self.mail.clone();
+        }
+
+        if self.imap_port.is_none(){
+            self.imap_port = Some(143);
+        }
+
+        if self.smtp_port.is_none(){
+            self.smtp_port = Some(25);
+        }
 
         }
 

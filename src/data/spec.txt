@@ -1,0 +1,27 @@
+accounts
+   │
+   ├───────────────┐
+   │               │
+   ▼               ▼
+folders          threads
+   │               │
+   │               │
+   └───────┬───────┘
+           ▼
+         emails
+           │
+           ▼
+      attachments
+
+
+accounts 1 ──── N folders
+
+accounts 1 ──── N threads
+
+accounts 1 ──── N emails
+
+folders  1 ──── N emails
+
+threads  1 ──── N emails
+
+emails   1 ──── N attachments

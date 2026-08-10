@@ -1,27 +1,14 @@
 pub mod smtp{
+    use std::error::Error;
+use lettre::Message;
+    use lettre::SmtpTransport;
+    use lettre::Transport;
+use lettre::transport::smtp::authentication::Credentials;
+use lettre::transport::smtp::response::Response;
 
-    pub fn send_mail() -> Result<()> {
-    let email = Message::builder()
-        .from("alice@example.com".parse()?)
-        .to("bob@example.com".parse()?)
-        .subject("Hello")
-        .body("Hello from Rust!")?;
+use crate::config::Config::EmailAccount;
 
-    let creds = Credentials::new(
-        "alice@example.com".to_string(),
-        "password".to_string(),
-    );
-
-    let mailer = SmtpTransport::relay("smtp.example.com")?
-        .credentials(creds)
-        .build();
-
-    mailer.send(&email)?;
-
-    Ok(())
-
-
+    pub fn send_mail(mail: &EmailAccount,recipient: &str,subj: &str,body: &str) -> Result<Response,Box<dyn Error>> {
+        Ok(SmtpTransport::relay(&mail.smtp_server)?.port(mail.smtp_port).credentials(mail.credentials).build().send(&Message::builder().from(sender.parse()?).to(recipient.parse()?).subject(subj).body(body.to_owned())?)?)
     }
-    
-
 }
