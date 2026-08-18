@@ -24,6 +24,8 @@ pub mod Helper{
         pub username: Option<String>,
         pub smtp_srvr: Option<String>,
         pub imap_srvr: Option<String>,
+        pub pop3_srvr: Option<String>,
+        pub pop3_port: Option<u16>,
         pub imap_port: Option<u16>,
         pub smtp_port: Option<u16>,
         pub config: Option<String>
@@ -38,7 +40,7 @@ pub mod Helper{
 
     impl CLI{
         pub fn new() -> Self{
-            Self {dbg: false,mail:None,db_pass:None,pass:None,db_url:None,db_user:None,db:None,db_port: None,username:None,smtp_srvr:None,imap_srvr:None,smtp_port:None,imap_port:None,config:None}
+            Self {dbg: false,mail:None,db_pass:None,pass:None,db_url:None,db_user:None,db:None,db_port: None,username:None,smtp_srvr:None,imap_srvr:None,smtp_port:None,imap_port:None,config:None,pop3_port:None,pop3_srvr:None}
         }
 
         pub fn Parse_Args(&mut self){
@@ -53,18 +55,25 @@ pub mod Helper{
             self.username = if let Ok(x) = std::env::var("USERNAME"){Some(x)}else{None}; 
             self.smtp_srvr = if let Ok(x) = std::env::var("SMTP_SRVR"){Some(x)}else{None}; 
             self.imap_srvr = if let Ok(x) = std::env::var("IMAP_SRVR"){Some(x)}else{None}; 
+            self.pop3_srvr = if let Ok(x) = std::env::var("POP3_SRVR"){Some(x)}else{None}; 
+ 
             self.smtp_port = if let Ok(x) = std::env::var("SMTP_PORT"){Some(x.parse().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
             self.imap_port = if let Ok(x) = std::env::var("IMAP_PORT"){Some(x.parse().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
+            self.pop3_port = if let Ok(x) = std::env::var("POP3_PORT"){Some(x.parse().expect("Port is an Unsigned 16 bit integer"))}else{None}; 
+
 
             if self.mail.is_none(){
                 self.mail = if let Ok(x) = std::env::var("EMAIL"){Some(x)}else{None}; 
             }
+
             if self.smtp_srvr.is_none(){
                 self.smtp_srvr = if let Ok(x) = std::env::var("SMTP_SERVER"){Some(x)}else{None}; 
             }
+
             if self.smtp_srvr.is_none(){
                 self.smtp_srvr = if let Ok(x) = std::env::var("SMTP"){Some(x)}else{None}; 
             }
+
 
 
             if self.imap_srvr.is_none(){
@@ -75,6 +84,14 @@ pub mod Helper{
                 self.imap_srvr = if let Ok(x) = std::env::var("IMAP"){Some(x)}else{None}; 
             }           
 
+
+            if self.pop3_srvr.is_none(){
+                self.pop3_srvr = if let Ok(x) = std::env::var("POP3_SERVER"){Some(x)}else{None}; 
+            }
+
+            if self.pop3_srvr.is_none(){
+                self.pop3_srvr = if let Ok(x) = std::env::var("POP3"){Some(x)}else{None}; 
+            }                      
 
             if self.db_port.is_none(){
                 self.db_port = if let Ok(x) = std::env::var("PORT"){Some(x.parse::<u16>().expect("Port is an Unsigned 16 bit integer"))}else{None}; 

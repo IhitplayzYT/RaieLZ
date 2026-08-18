@@ -15,7 +15,7 @@ use crate::tui::app::app::MyColor;
 
     impl Default for Config{
         fn default() -> Self {
-            Self { colors: [MyColor::White,MyColor::Black,MyColor::Gray,MyColor::Blue,MyColor::LightRed], win_size: vec![], win_toggle:KeyCode::Tab}
+            Self { colors: [MyColor::White,MyColor::Black,MyColor::RGB(50, 50, 50),MyColor::Blue,MyColor::BrightRed], win_size: vec![], win_toggle:KeyCode::Tab}
         }
     }
 
@@ -24,8 +24,10 @@ use crate::tui::app::app::MyColor;
         pub address: String,
         pub smtp_server: String,
         pub imap_server: String,
+        pub pop3_server: String,
         pub smtp_port: u16,
         pub imap_port: u16,
+        pub pop3_port: u16,
         pub username: String,
         pass: String,
         pub credentials: Credentials,
@@ -33,8 +35,12 @@ use crate::tui::app::app::MyColor;
 
 
     impl EmailAccount{
-        pub fn new(address: String,smtp_server: String,imap_server: String,username: String,pass:String,smtp_port:u16,imap_port:u16) -> Self{
-            Self { address, smtp_server, imap_server, username:username.clone(), credentials: Credentials::new(username, pass.clone()),smtp_port,imap_port,pass}
+        pub fn new(address: String,smtp_server: String,imap_server: String,pop3_server: String,username: String,pass:String,smtp_port:u16,imap_port:u16,pop3_port:u16) -> Self{
+            Self { address, smtp_server, imap_server, username:username.clone(), credentials: Credentials::new(username, pass.clone()),smtp_port,imap_port,pass,pop3_server,pop3_port}
+        }
+
+        pub fn get_pass(&self) -> &str{
+            &self.pass
         }
 
         // This is a exposed setter since multiple fields need updating

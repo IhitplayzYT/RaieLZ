@@ -9,6 +9,14 @@ use lettre::transport::smtp::response::Response;
 use crate::config::Config::EmailAccount;
 
     pub fn send_mail(mail: &EmailAccount,recipient: &str,subj: &str,body: &str) -> Result<Response,Box<dyn Error>> {
-        Ok(SmtpTransport::relay(&mail.smtp_server)?.port(mail.smtp_port).credentials(mail.credentials).build().send(&Message::builder().from(sender.parse()?).to(recipient.parse()?).subject(subj).body(body.to_owned())?)?)
+        Ok(SmtpTransport::relay(&mail.smtp_server)?
+        .port(mail.smtp_port)
+        .credentials(mail.credentials.clone())
+        .build()
+        .send(&Message::builder()
+        .from(mail.address.parse()?)
+        .to(recipient.parse()?)
+        .subject(subj)
+        .body(body.to_owned())?)?)
     }
 }
