@@ -8,6 +8,7 @@ mod protocol;
 mod data;
 mod tui;
 mod config;
+mod parsers;
 
 fn main() {
     let mut clargs = CLI::new();
