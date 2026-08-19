@@ -16,6 +16,7 @@ dependencies = [
  "mysql",
  "pop3-mail-client",
  "ratatui",
+ "regex",
  "serde",
  "serde_json",
  "tokio",

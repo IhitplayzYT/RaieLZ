@@ -51,12 +51,7 @@ pub mod models{
 
     impl Default for MailFolder {
         fn default() -> Self {
-            Self {
-                name: String::new(),
-                mails: Vec::new(),
-                unread_count: 0,
-                total_count: 0,
-            }
+            Self {name: String::new(),mails: Vec::new(),unread_count: 0,total_count: 0}
         }
     }
 
@@ -78,43 +73,13 @@ pub mod models{
 
     impl Default for MailSettings {
         fn default() -> Self {
-            Self {
-                imap_server: String::new(),
-                imap_port: 993,
-                imap_username: String::new(),
-                imap_password: String::new(),
-                imap_use_ssl: true,
-                smtp_server: String::new(),
-                smtp_port: 587,
-                smtp_username: String::new(),
-                smtp_password: String::new(),
-                smtp_use_ssl: true,
-                default_signature: None,
-                auto_check_interval: None,
-            }
+            Self {imap_server: String::new(),imap_port: 993,imap_username: String::new(),imap_password: String::new(),imap_use_ssl: true,smtp_server: String::new(),smtp_port: 587,smtp_username: String::new(),smtp_password: String::new(),smtp_use_ssl: true,default_signature: None,auto_check_interval: None}
         }
     }
 
     impl Default for Mail{
         fn default() -> Self {
-            Self { 
-                header: "".to_string(), 
-                body: "".to_string(),
-                from: None,
-                to: Vec::new(),
-                cc: Vec::new(),
-                bcc: Vec::new(),
-                subject: None,
-                date: None,
-                message_id: None,
-                attachments: Vec::new(),
-                urls: Vec::new(),
-                in_reply_to: None,
-                references: Vec::new(),
-                headers: HashMap::new(),
-                is_multipart: false,
-                content_type: None,
-            }
+            Self { header: "".to_string(), body: "".to_string(),from: None,to: Vec::new(),cc: Vec::new(),bcc: Vec::new(),subject: None,date: None,message_id: None,attachments: Vec::new(),urls: Vec::new(),in_reply_to: None,references: Vec::new(),headers: HashMap::new(),is_multipart: false,content_type: None}
         }
     }
 
@@ -124,7 +89,7 @@ pub mod models{
         }
 
         pub fn get_raw(&self,seperator: Option<&str>) -> String{
-            self.header.clone() +if let Some(x) = seperator{x}else{""}+ &self.body
+            self.header.clone() + if let Some(x) = seperator{x}else{""} + &self.body
         }
 
         pub fn has_attachments(&self) -> bool {
@@ -135,9 +100,9 @@ pub mod models{
             self.attachments.iter().map(|a| a.size).sum()
         }
 
-        
-
-
+        pub fn n_attachments(&self) -> usize{
+            self.attachments.len()
+        }
     }
 
 
